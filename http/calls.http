@@ -1,0 +1,23 @@
+### Base url
+GET http://localhost:3000/api/
+
+### Create item
+POST http://localhost:3000/api/items
+Content-Type: application/json
+
+{
+  "name": "hello",
+  "description": "Just a hello"
+}
+
+### Get items
+GET http://localhost:3000/api/items
+
+### Create observation
+POST http://localhost:3000/api/items/{id}/observations
+Content-Type: application/json
+
+{
+  "start": "2025-01-01T00:00:02Z",
+  "end": "2025-01-01T00:00:58Z"
+}
