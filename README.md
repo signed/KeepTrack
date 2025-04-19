@@ -84,3 +84,9 @@ This template comes with [Tailwind CSS](https://tailwindcss.com/) already config
 ---
 
 Built with ❤️ using React Router.
+
+
+switch from fp-ts to https://effect.website/docs/getting-started/why-effect/
+- [A bright future for Effect](https://dev.to/effect/a-bright-future-for-effect-455m)
+- https://github.com/gcanti/fp-ts/discussions/1940
+- https://github.com/gcanti/fp-ts/discussions/1852

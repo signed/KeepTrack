@@ -4,6 +4,7 @@ import {existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync} from 'n
 import {resolve} from 'node:path'
 import * as E from "fp-ts/Either"
 import {z} from 'zod'
+import type {Observation} from "./observation";
 
 export type RetrieveItemError = 'failed'
 
@@ -13,6 +14,8 @@ export interface Storage {
     retrieveItem(id: string): E.Either<RetrieveItemError, Item>
 
     items(): Item[]
+
+    storeObservation(itemId: string, observation: Observation): void;
 }
 
 const ItemStorageFormat = z.object({id: z.string(), name: z.string(), description: z.string()})
@@ -53,6 +56,10 @@ export class FileStorage implements Storage {
             .map(it => it.name)
             .map(it => this.retrieveItem(it))
             .filter(it => E.isRight(it)).map(it => it.right);
+    }
+
+    storeObservation(itemId: string, observation: Observation): void {
+        throw new Error("Method not implemented.");
     }
 
     private itemPathFor(itemId: string) {

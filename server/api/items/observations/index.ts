@@ -3,23 +3,49 @@ import {z} from "zod";
 import express, {type Request, type Response} from "express";
 //todo import json directly?
 import bodyparser from "body-parser";
+import { Temporal, Intl, toTemporalInstant } from '@js-temporal/polyfill';
+import {isCuid, createId} from "@paralleldrive/cuid2";
+import {parseInstantFrom} from "./temporal";
+import * as E from 'fp-ts/Either'
+import type {Observation} from "../../../../core/observation";
 
 const CreateObservationSchema = z.object({
-    start: z.date(),
+    start: z.string().datetime(),
     end: z.string().datetime()
 });
 
+
+
 export const observationsRouter = (expressContext: ExpressContext) => {
     const {storage} = expressContext;
-
     const observationsRouter = express.Router({mergeParams: true});
-    observationsRouter.post('/', [bodyparser.json(), (req: Request, res: Response) => {
+
+    observationsRouter.post('/', [bodyparser.json(), (req: Request<{ itemId: string }>, res: Response) => {
+        const itemId = req.params.itemId;
+        if (!isCuid(itemId)) {
+            res.status(400).end()
+            return
+        }
         const parseResult = CreateObservationSchema.safeParse(req.body);
         if (parseResult.error) {
             res.status(400).end();
             return
         }
-        res.json()
+
+        const body = parseResult.data;
+        const startE = parseInstantFrom(body.start);
+        const endE = parseInstantFrom(body.end)
+
+        if(E.isLeft(startE) || E.isLeft(endE)) {
+            res.status(400).end();
+            return
+        }
+        const id = createId()
+        const start = startE.right;
+        const end = endE.right;
+        const observation: Observation = {id, start, end}
+        storage.storeObservation(itemId, observation)
+        res.json(observation)
     }])
 
     return observationsRouter
