@@ -1,8 +1,8 @@
 ### Base url
-GET http://localhost:3000/api/
+GET {{base}}
 
 ### Create item
-POST http://localhost:3000/api/items
+POST {{base}}/items
 Content-Type: application/json
 
 {
@@ -11,13 +11,13 @@ Content-Type: application/json
 }
 
 ### Get items
-GET http://localhost:3000/api/items
+GET {{base}}/items
 
 ### Get item
-GET http://localhost:3000/api/items/whz9wd7hjo01us8pjycm5xie
+GET {{base}}/items/whz9wd7hjo01us8pjycm5xie
 
 ### Create observation
-POST http://localhost:3000/api/items/{id}/observations
+POST {{base}}/items/{id}/observations
 Content-Type: application/json
 
 {
