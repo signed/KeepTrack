@@ -1,23 +1,22 @@
-### Base url
-GET {{base}}
-
 ### Create item
 POST {{base}}/items
 Content-Type: application/json
 
 {
-  "name": "hello",
-  "description": "Just a hello"
+  "name": "{{$random.hacker.noun}}",
+  "description": "{{$random.lorem.sentence}}"
 }
+
+> {% client.global.set("item_id", response.body.id); %}
+
+### Get item
+GET {{base}}/items/{{item_id}}
 
 ### Get items
 GET {{base}}/items
 
-### Get item
-GET {{base}}/items/whz9wd7hjo01us8pjycm5xie
-
 ### Create observation
-POST {{base}}/items/{id}/observations
+POST {{base}}/items/{{item_id}}/observations
 Content-Type: application/json
 
 {
