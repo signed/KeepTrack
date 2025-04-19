@@ -18,10 +18,6 @@ export const observationsRouter = (expressContext: ExpressContext) => {
 
     observationsRouter.post('/', [bodyparser.json(), (req: Request<{ itemId: string }>, res: Response) => {
         const itemId = req.params.itemId;
-        if (!isCuid(itemId)) {
-            res.status(400).end()
-            return
-        }
         const parseResult = CreateObservationSchema.safeParse(req.body);
         if (parseResult.error) {
             res.status(400).end();
@@ -46,10 +42,6 @@ export const observationsRouter = (expressContext: ExpressContext) => {
 
     observationsRouter.get('/', (req: Request<{ itemId: string }>, res: Response) => {
         const itemId = req.params.itemId;
-        if (!isCuid(itemId)) {
-            res.status(400).end()
-            return
-        }
         res.json(storage.observations(itemId))
     })
 
