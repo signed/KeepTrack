@@ -59,7 +59,9 @@ export class FileStorage implements Storage {
     }
 
     storeObservation(itemId: string, observation: Observation): void {
-        throw new Error("Method not implemented.");
+        const itemDirectory = this.itemDirectoryPathFor(itemId);
+        const observationFile = resolve(itemDirectory, `${observation.id}.json`);
+        writeFileSync(observationFile, JSON.stringify(observation, null, 2))
     }
 
     private itemPathFor(itemId: string) {

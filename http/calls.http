@@ -7,7 +7,9 @@ Content-Type: application/json
   "description": "{{$random.lorem.sentence}}"
 }
 
-> {% client.global.set("item_id", response.body.id); %}
+> {%
+    client.global.set("item_id", response.body.id);
+%}
 
 ### Get item
 GET {{base}}/items/{{item_id}}
@@ -16,10 +18,20 @@ GET {{base}}/items/{{item_id}}
 GET {{base}}/items
 
 ### Create observation
+< {%
+    const longUUID = $random.uuid
+
+    const end = new Date();
+    const runtime = $random.integer(45, 68);
+    const start = new Date(end.valueOf() - (runtime * 1000));
+    request.variables.set("pre_start", start.toISOString())
+    request.variables.set("pre_end", end.toISOString())
+
+%}
 POST {{base}}/items/{{item_id}}/observations
 Content-Type: application/json
 
 {
-  "start": "2025-01-01T00:00:02Z",
-  "end": "2025-01-01T00:00:58Z"
+  "start": "{{pre_start}}",
+  "end": "{{pre_end}}"
 }
