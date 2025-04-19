@@ -13,6 +13,9 @@ Content-Type: application/json
 ### Get items
 GET http://localhost:3000/api/items
 
+### Get item
+GET http://localhost:3000/api/items/whz9wd7hjo01us8pjycm5xie
+
 ### Create observation
 POST http://localhost:3000/api/items/{id}/observations
 Content-Type: application/json
