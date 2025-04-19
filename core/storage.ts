@@ -5,6 +5,7 @@ import {resolve} from 'node:path'
 import * as E from "fp-ts/Either"
 import {z} from 'zod'
 import type {Observation} from "./observation";
+import {Temporal} from "@js-temporal/polyfill";
 
 export type RetrieveItemError = 'failed'
 
@@ -16,9 +17,20 @@ export interface Storage {
     items(): Item[]
 
     storeObservation(itemId: string, observation: Observation): void;
+
+    observations(itemId: string): Observation[];
 }
 
-const ItemStorageFormat = z.object({id: z.string(), name: z.string(), description: z.string()})
+const ItemStorageFormat = z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string()
+})
+const ObservationStorageFormat = z.object({
+    id: z.string(),
+    start: z.string().datetime(),
+    end: z.string().datetime()
+});
 
 export class FileStorage implements Storage {
     private readonly dataRoot: string;
@@ -62,6 +74,35 @@ export class FileStorage implements Storage {
         const itemDirectory = this.itemDirectoryPathFor(itemId);
         const observationFile = resolve(itemDirectory, `${observation.id}.json`);
         writeFileSync(observationFile, JSON.stringify(observation, null, 2))
+    }
+
+    observations(itemId: string): Observation[] {
+        const itemDirectory = this.itemDirectoryPathFor(itemId);
+
+        return readdirSync(itemDirectory, {withFileTypes: true})
+            .filter(it => it.isFile())
+            .filter(it => 'item.json' !== it.name)
+            .map(it => {
+                const path = resolve(itemDirectory, it.name);
+                return readFileSync(path, 'utf-8');
+            })
+            .map(it => JSON.parse(it))
+            .map(it => {
+                const result = ObservationStorageFormat.safeParse(it);
+                if (result.error) {
+                    return E.left('failed')
+                }
+                return E.right(result.data);
+            })
+            .filter(it => E.isRight(it))
+            .map(it => {
+                const dto = it.right;
+                const id = dto.id
+                const start = Temporal.Instant.from(dto.start)
+                const end = Temporal.Instant.from(dto.end)
+                const observation: Observation = {id, start, end}
+                return observation
+            })
     }
 
     private itemPathFor(itemId: string) {

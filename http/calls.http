@@ -35,3 +35,6 @@ Content-Type: application/json
   "start": "{{pre_start}}",
   "end": "{{pre_end}}"
 }
+
+### Get observations
+GET {{base}}/items/{{item_id}}/observations

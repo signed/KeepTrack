@@ -12,8 +12,6 @@ const CreateObservationSchema = z.object({
     end: z.string().datetime()
 });
 
-
-
 export const observationsRouter = (expressContext: ExpressContext) => {
     const {storage} = expressContext;
     const observationsRouter = express.Router({mergeParams: true});
@@ -34,7 +32,7 @@ export const observationsRouter = (expressContext: ExpressContext) => {
         const startE = parseInstantFrom(body.start);
         const endE = parseInstantFrom(body.end)
 
-        if(E.isLeft(startE) || E.isLeft(endE)) {
+        if (E.isLeft(startE) || E.isLeft(endE)) {
             res.status(400).end();
             return
         }
@@ -45,6 +43,15 @@ export const observationsRouter = (expressContext: ExpressContext) => {
         storage.storeObservation(itemId, observation)
         res.json(observation)
     }])
+
+    observationsRouter.get('/', (req: Request<{ itemId: string }>, res: Response) => {
+        const itemId = req.params.itemId;
+        if (!isCuid(itemId)) {
+            res.status(400).end()
+            return
+        }
+        res.json(storage.observations(itemId))
+    })
 
     return observationsRouter
 }
