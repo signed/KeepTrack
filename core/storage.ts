@@ -14,6 +14,8 @@ export interface Storage {
 
     retrieveItem(id: string): E.Either<RetrieveItemError, Item>
 
+    itemExists(itemId: string): boolean;
+
     items(): Item[]
 
     storeObservation(itemId: string, observation: Observation): void;
@@ -47,6 +49,10 @@ export class FileStorage implements Storage {
         }
         const itemPath = this.itemPathFor(item.id)
         writeFileSync(itemPath, JSON.stringify(item, null, 2))
+    }
+
+    itemExists(itemId: string): boolean {
+        return existsSync(this.itemPathFor(itemId))
     }
 
     retrieveItem(itemId: string): E.Either<RetrieveItemError, Item> {

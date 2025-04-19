@@ -45,7 +45,18 @@ export const itemsRouter = (expressContext: ExpressContext) => {
         }
         res.json(item.right)
     }])
-    itemsRouter.use('/:itemId/observations', observationsRouter(expressContext))
+    itemsRouter.use('/:itemId/observations', function(req: Request<{ itemId: string }>, res, next) {
+        const itemId = req.params.itemId;
+        if (!isCuid(itemId)) {
+            res.status(400).end()
+            return
+        }
+        if(!storage.itemExists(itemId)){
+            res.status(404).end()
+            return
+        }
+        next()
+    }, observationsRouter(expressContext))
 
     return itemsRouter
 }
