@@ -4,7 +4,7 @@ import express, { type Request, type Response } from 'express'
 import bodyparser from 'body-parser'
 import { createId, isCuid } from '@paralleldrive/cuid2'
 import { parseInstantFrom } from './temporal'
-import * as E from 'fp-ts/Either'
+import * as E from 'fp-ts/lib/Either'
 import type { Observation } from '../../../../core/observation'
 
 const CreateObservationSchema = z.object({

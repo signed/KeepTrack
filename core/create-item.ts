@@ -1,4 +1,4 @@
-import * as E from 'fp-ts/Either'
+import * as E from 'fp-ts/lib/Either'
 import { pipe } from 'fp-ts/function'
 import { type Item } from './item'
 import { createId } from '@paralleldrive/cuid2'

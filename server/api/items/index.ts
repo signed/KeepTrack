@@ -5,7 +5,7 @@ import bodyparser from 'body-parser'
 import { createItem } from '../../../core/create-item'
 import { isCuid } from '@paralleldrive/cuid2'
 import { retrieveItem } from '../../../core/retrieve-item'
-import * as E from 'fp-ts/Either'
+import * as E from 'fp-ts/lib/Either'
 import { observationsRouter } from './observations'
 
 const CreateItemSchema = z.object({
