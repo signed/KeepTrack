@@ -121,3 +121,9 @@ export class FileStorage implements Storage {
     return resolve(this.dataRoot, itemId)
   }
 }
+
+export const padWithLeadingZero = (value: number, length: number) => value.toString().padStart(length, '0')
+export const dateAsString = (instant: Temporal.Instant) => {
+  const flup = instant.toZonedDateTimeISO('UTC')
+  return `${flup.year}-${padWithLeadingZero(flup.month, 2)}-${padWithLeadingZero(flup.day, 2)}`
+}
